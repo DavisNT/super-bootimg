@@ -35,6 +35,7 @@ suBackL0() {
 
 	#ES Explorer opens a sokcet
 	allow untrusted_app su unix_stream_socket "$rw_socket_perms connectto"
+	[ "$ANDROID" -ge 26 ] && allow untrusted_app_25 su unix_stream_socket "$rw_socket_perms connectto"
 
 	#Any domain is allowed to send su "sigchld"
 	#TODO: Have sepolicy-inject handle that
@@ -86,6 +87,7 @@ suRights() {
 	#untrusted_app_devpts not in Android 4.4
 	if [ "$ANDROID" -ge 20 ];then
 		allow $1 untrusted_app_devpts chr_file "read write open getattr ioctl"
+		[ "$ANDROID" -ge 26 ] && allow $1 untrusted_app_25_devpts chr_file "read write open getattr ioctl"
 	else
 		allow $1 devpts chr_file "read write open getattr ioctl"
 	fi
@@ -115,6 +117,7 @@ suReadLogs() {
 
 suToApps() {
 	allow $1 untrusted_app fifo_file "ioctl getattr"
+	[ "$ANDROID" -ge 26 ] && allow $1 untrusted_app_25 fifo_file "ioctl getattr"
 	allow $1 app_data_file dir "search getattr"
 	allow $1 app_data_file file "getattr execute read open execute_no_trans"
 }

@@ -167,9 +167,14 @@ allowFSRWX() {
 startBootImgEdit "$1"
 
 if [ -f sepolicy ] && \
+	"$scriptdir/bin/sepolicy-inject-v2" -e -s untrusted_app_25 -P sepolicy;then
+	#Android O
+	SEPOLICY="-v2"
+	ANDROID=26
+elif [ -f sepolicy ] && \
 	! "$scriptdir/bin/sepolicy-inject" -e -c filesystem -P sepolicy && \
 	"$scriptdir/bin/sepolicy-inject-v2" -e -c filesystem -P sepolicy;then
-
+	#Android N
 	SEPOLICY="-v2"
 	ANDROID=24
 elif "$scriptdir/bin/sepolicy-inject" -e -s gatekeeper_service -P sepolicy;then

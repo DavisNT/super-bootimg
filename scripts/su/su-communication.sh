@@ -42,6 +42,7 @@ suDaemonRights() {
 	allow su_daemon devpts chr_file "read write open getattr"
 	#untrusted_app_devpts not in Android 4.4
 	allow su_daemon untrusted_app_devpts chr_file "read write open getattr" || true
+	[ "$ANDROID" -ge 26 ] && allow su_daemon untrusted_app_25_devpts chr_file "read write open getattr" || true
 
 	allow su_daemon su_daemon "capability" "setuid setgid"
 

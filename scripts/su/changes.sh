@@ -69,6 +69,15 @@ if [ -f "sepolicy" -a -z "$UNSUPPORTED_SELINUX" ];then
 	allowSuClient system_app
 	allowSuClient su
 	[ "$ANDROID" -ge 24 ] && allowSuClient priv_app
+	if [ "$ANDROID" -ge 26 ];then
+		allowSuClient untrusted_app_25
+		allow untrusted_app untrusted_app_devpts chr_file "ioctl"
+		allow untrusted_app_25 untrusted_app_25_devpts chr_file "ioctl"
+		allow system_server su_daemon fd "use"
+		allow su_daemon properties_device dir "read open"
+		allow su_daemon rootfs file "read open"
+		allow su_daemon proc_stat file "read open getattr"
+	fi
 
 	#HTC Debug context requires SU
 	"$scriptdir/bin/sepolicy-inject$SEPOLICY" -e -s ssd_tool -P sepolicy && allowSuClient ssd_tool
